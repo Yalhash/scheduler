@@ -14,7 +14,7 @@ func (n *Node) SetValue(val interface{}) {
 }
 
 //GetValue gets the value of the node
-func (n *Node) GetValue() {
+func (n *Node) GetValue() interface{} {
 	return n.value
 }
 
@@ -38,8 +38,8 @@ func (p *PPT) AddChild(newChildValue interface{}) {
 	p.rootChildren = append(p.rootChildren, &Node{value: newChildValue})
 }
 
-//GetChildren gets the child of the index
-func (p PPT) GetChildren(index int) *Node {
+//GetChild gets the child of the index
+func (p PPT) GetChild(index int) *Node {
 	defer func() {
 		//recover and custom error
 		if recover() != nil {
@@ -53,7 +53,7 @@ func (p PPT) GetChildren(index int) *Node {
 //Walkthrough takes the index of the child chain
 //returns a function that will return the next node in the chain
 func (p PPT) Walkthrough(index int) func() *Node {
-	currNode := p.GetChildren(index)
+	currNode := p.GetChild(index)
 	return func() *Node {
 		retNode := currNode
 		if currNode != nil {
@@ -66,7 +66,7 @@ func (p PPT) Walkthrough(index int) func() *Node {
 //AddToChain adds a parent to the end of a children chain
 func (p *PPT) AddToChain(index int, newValue interface{}) {
 	//get the index of one of the root children
-	currNode := p.GetChildren(index)
+	currNode := p.GetChild(index)
 	//go to the end of the chain
 	for currNode.parent != nil {
 		currNode = currNode.parent
@@ -77,7 +77,7 @@ func (p *PPT) AddToChain(index int, newValue interface{}) {
 //AttachChains takes two chains, the parent of
 //the tailChainIndex attatches to the parent of the headChainIndex
 func (p *PPT) AttachChains(headChainIndex, tailChainIndex int) {
-	headNode := p.GetChildren(headChainIndex)
+	headNode := p.GetChild(headChainIndex)
 	if headNode == nil {
 		panic("headChain is empty!")
 	}
@@ -85,7 +85,7 @@ func (p *PPT) AttachChains(headChainIndex, tailChainIndex int) {
 		headNode = headNode.parent
 	}
 	//headNode is at the front of the headChain
-	tailNode := p.GetChildren(tailChainIndex)
+	tailNode := p.GetChild(tailChainIndex)
 	if tailNode == nil {
 		panic("headChain is empty!")
 	}
