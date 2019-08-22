@@ -4,7 +4,18 @@ package parentpointertree
 //a value and pointers
 type Node struct {
 	parent *Node
-	Value  interface{}
+	value  interface{}
+}
+
+
+//SetValue sets the value of the node
+func (n *Node) SetValue(val interface{}) {
+	n.value = val
+}
+
+//GetValue gets the value of the node
+func (n *Node) GetValue() {
+	return n.value
 }
 
 //SetParent sets the parent node for a child
@@ -18,14 +29,13 @@ func (n *Node) GetParent() *Node {
 }
 
 //PPT is a parent pointer tree
-//use new(PPT) use it's Init function
 type PPT struct {
-	RootChildren []*Node
+	rootChildren []*Node
 }
 
 //AddChild adds a node pointer to the slice of children
 func (p *PPT) AddChild(newChildValue interface{}) {
-	p.RootChildren = append(p.RootChildren, &Node{Value: newChildValue})
+	p.rootChildren = append(p.rootChildren, &Node{value: newChildValue})
 }
 
 //GetChildren gets the child of the index
@@ -36,7 +46,7 @@ func (p PPT) GetChildren(index int) *Node {
 			panic("No child node exists at this index!")
 		}
 	}()
-	return p.RootChildren[index]
+	return p.rootChildren[index]
 
 }
 
@@ -61,7 +71,7 @@ func (p *PPT) AddToChain(index int, newValue interface{}) {
 	for currNode.parent != nil {
 		currNode = currNode.parent
 	}
-	currNode.parent = &Node{Value: newValue}
+	currNode.parent = &Node{value: newValue}
 }
 
 //AttachChains takes two chains, the parent of
