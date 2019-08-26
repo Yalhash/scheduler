@@ -1,14 +1,13 @@
 package datastructures
 
-
-
 //Status of Task object
 type Status int
 
 //status enum
 const (
 	_ = iota
-	UnFinished
+	NotReady
+	Ready
 	Working
 	Finished
 )
@@ -20,4 +19,5 @@ type Task struct {
 	Requirements []*Task
 	WorkStatus Status
 }
+
 

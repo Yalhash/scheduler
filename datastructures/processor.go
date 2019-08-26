@@ -8,12 +8,13 @@ var processorCount int
 type Processor struct {
 	ID int
 	Name string
+	Working bool
 }
 
 
 //NewGenericProcessor creates a generic processor without a name
 func NewGenericProcessor() Processor {
-	newProc := Processor {ID: processorCount}
+	newProc := Processor {ID: processorCount, Working: false,}
 	processorCount++
 	return newProc
 }
@@ -23,6 +24,7 @@ func NewNamedProcessor(processName string) Processor {
 	newProc := Processor {
 		ID: processorCount,
 		Name: processName,
+		Working: false,
 	}
 	processorCount++
 	return newProc
