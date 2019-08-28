@@ -32,41 +32,53 @@ func (l *linkedlist) GetNode(index int) interface{} {
 
 //Graph holds an adjacancy list containing all nodes and their connections
 //cannot repeat an ID value
-type Graph map[string]*linkedlist
+type Graph map[*Task]*linkedlist
 
 //AddNode adds a node to the graph
-func (g Graph) AddNode(nodeID string) {
+func (g Graph) AddNode(newTask *Task) {
 	
-	if _, check := g[nodeID]; !check {
-		g[nodeID] = new(linkedlist)
+	if _, check := g[newTask]; !check {
+		g[newTask] = new(linkedlist)
 	}
 }
-//AddDirectedEdge adds an edge between startID and endID,
-//such that startID points to endID
-func (g Graph) AddDirectedEdge(startID, endID string) {
-	g[startID].Add(endID)
+//AddDirectedEdge adds an edge between startTask and endTask
+//such that startTask points to endTask
+func (g Graph) AddDirectedEdge(startTask, endTask *Task) {
+	g[startTask].Add(endTask)
 }
 
 //MakeGraphFromTasks takes a slice of tasks and
 //creates a directed graph
-func MakeGraphFromTasks(tasks []Task) Graph {
-	var newGraph Graph = make(map[string]*linkedlist)
+func MakeGraphFromTasks(tasks []*Task) Graph {
+	var newGraph Graph = make(map[*Task]*linkedlist)
 	//add all nodes
 	for _, t := range tasks {
 		//if the node has not been added yet add it
-		if _, check :=  newGraph[t.ID]; !check {
-			newGraph.AddNode(t.ID)
+		if _, check :=  newGraph[t]; !check {
+			newGraph.AddNode(t)
 		}
 		//add all of the edges associated with it
 		for _, reqTask := range t.Requirements {
 			//if the node has not been added yet add it
-			if _, check :=  newGraph[reqTask.ID]; !check {
-				newGraph.AddNode(reqTask.ID)
+			if _, check :=  newGraph[reqTask]; !check {
+				newGraph.AddNode(reqTask)
 			}
-			newGraph.AddDirectedEdge(reqTask.ID, t.ID)
+			newGraph.AddDirectedEdge(reqTask, t)
 		}
-		
 	}
 	return newGraph
+}
+
+func isEndTask(checkTask *Task, taskList []*Task) bool{
+	for _, t := range taskList {
+		if t != checkTask {
+			for _, req := t.Requirements {
+				if req == checkTask {
+					return false
+				}
+			}
+		}
+	}
+	return true
 }
 

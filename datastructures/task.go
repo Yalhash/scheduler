@@ -10,6 +10,7 @@ const (
 	Ready
 	Working
 	Finished
+	End
 )
 
 //Task is the object that needs to be scheduled
